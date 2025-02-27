@@ -18,13 +18,15 @@ public class DemoQAElements {
 static WebDriver driver;
 
     @BeforeTest
-    public static void setup() {
+    public static void setup() 
         // Set up WebDriver
-        driver = new EdgeDriver();
+       {driver = new EdgeDriver();
         driver.manage().window().maximize();}
 
     @Test
     public static void ElementsinDemoQA() throws InterruptedException {
+    	
+    	try {
         // Step 1: Launch the browser and navigate to the Elements page
         driver.get("https://demoqa.com/elements"); 
         
@@ -124,61 +126,64 @@ static WebDriver driver;
         WebElement clickRadioButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text()='Radio Button']")));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", clickRadioButton);
         
-        //Step 3.4: Scroll up the page to select radio button
-        WebElement yesRadioButton = wait.until(ExpectedConditions.elementToBeClickable(By.id("yesRadio")));
-        yesRadioButton.click();
-        Assert.assertTrue(yesRadioButton.isSelected(), "The 'Yes' radio button was not selected.");
-        System.out.println("Yes radio button selected successfully.");
-        
-        //Step 3.4: Verify the selected radio box 
-        WebElement selectedImpressiveButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[text='text-success']")));
-        Assert.assertTrue(selectedImpressiveButton.isDisplayed(), "Selected radio button not displayed");
-        System.out.println("Impressive radio box selected");
+        //Step 3.4: Click on Yes at radio button
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        WebElement yesRadioButton = driver.findElement(By.xpath("//input[@name='like' and @type='radio']\r\n"+ ""));
+        js.executeScript("arguments[0].click();", yesRadioButton);
+
+
+        // Step 3.5: Verify the selected radio box 
+        WebElement yesRadioButtonmeaasage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(@class, 'text-success')]")));
+        Assert.assertTrue(yesRadioButtonmeaasage.isDisplayed(), "Selected radio button not displayed");
+        System.out.println("Yes radio box selected");
+
         
 
         // Error Handling: Check for 502/500 errors
-        handleErrorAndRetry();	    
-    }	
+        handleErrorAndRetry();
+    	}
+    	catch(Exception e) 
+        {System.out.println("ExceptionMessage:"+e.getMessage());}}	
 
     private static void handleErrorAndRetry() throws InterruptedException {
-        //Initial retry count
-    	int retryCount = 0;
-    	//Max retry count
-        int maxRetries = 3; 
+        int retryCount = 0;
+        int maxRetries = 3;
+        boolean retrySuccessful = false; // Track if the retry is successful
+
         while (retryCount < maxRetries) {
             try {
-                // Check if there is a 502/500 error by inspecting the page title or error text
+                // Check for 502/500 error by inspecting the page title or source
                 if (driver.getTitle().contains("502") || driver.getTitle().contains("500") || 
                     driver.getPageSource().contains("502") || driver.getPageSource().contains("500")) {
                     System.out.println("Detected 502/500 error, refreshing the page.");
                     driver.navigate().refresh();
                     retryCount++;
-                    // wait before retry
-                    Thread.sleep(2000); 
-                    //Retry after refresh
-                    continue;}
-                	// If no error detected, break out of the loop and proceed
-                	break;} 
-            
-            catch (NoSuchWindowException e) {
+                    Thread.sleep(2000); // Wait before retrying
+                } else {
+                    // If no error detected, break the loop and continue
+                    retrySuccessful = true;
+                    break; // Exit the loop since no error was detected
+                }
+            } catch (NoSuchWindowException e) {
                 System.out.println("No such window detected. Retrying...");
                 retryCount++;
                 driver.navigate().refresh();
-                Thread.sleep(2000);} 
-            
-            catch (Exception e) {
+                Thread.sleep(2000);
+            } catch (Exception e) {
                 // Log unexpected exceptions
                 System.out.println("An error occurred: " + e.getMessage());
-                break;}
+                break; // Exit the loop if an unexpected exception occurs
+            }
         }
-        
+
+        // After retry loop ends, either continue or stop the test based on retry count
         if (retryCount >= maxRetries) {
             System.out.println("Maximum retry attempts reached. Test will stop.");
-        } else {
-            // Proceed with the test logic after the error handling and retries
-            ElementsinDemoQA();
+        } else if (retrySuccessful) {
+            System.out.println("Continuing test after error handling.");
         }
     }
+
 
 
     @AfterTest

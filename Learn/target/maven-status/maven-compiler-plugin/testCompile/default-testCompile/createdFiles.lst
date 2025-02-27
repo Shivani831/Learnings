@@ -1,2 +1,4 @@
-testpackage\DemoQATest.class
-testpackage\Test1.class
+demoQA\DemoQATest.class
+demoQA\DemoQAElements.class
+demoQA\Test1.class
+demoQA\DemoQATest1.class
