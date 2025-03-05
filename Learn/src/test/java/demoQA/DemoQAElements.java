@@ -19,9 +19,11 @@ static WebDriver driver;
 
     @BeforeTest
     public static void setup() 
-        // Set up WebDriver
        {driver = new EdgeDriver();
-        driver.manage().window().maximize();}
+        driver.manage().window().maximize();
+        System.out.println("Browser Opend successfully.");
+}
+    
 
     @Test
     public static void ElementsinDemoQA() throws InterruptedException {
@@ -29,6 +31,8 @@ static WebDriver driver;
     	try {
         // Step 1: Launch the browser and navigate to the Elements page
         driver.get("https://demoqa.com/elements"); 
+        System.out.println("DemoQA web app launched.");
+
         
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30)); 
 
@@ -128,7 +132,7 @@ static WebDriver driver;
         
         //Step 3.4: Click on Yes at radio button
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        WebElement yesRadioButton = driver.findElement(By.xpath("//input[@name='like' and @type='radio']\r\n"+ ""));
+        WebElement yesRadioButton = driver.findElement(By.xpath("//label[@for='yesRadio']"));
         js.executeScript("arguments[0].click();", yesRadioButton);
 
 
@@ -140,49 +144,52 @@ static WebDriver driver;
         
 
         // Error Handling: Check for 502/500 errors
-        handleErrorAndRetry();
+      
     	}
     	catch(Exception e) 
-        {System.out.println("ExceptionMessage:"+e.getMessage());}}	
+    	{  handleErrorAndRetry();
+    		System.out.println("ExceptionMessage:"+e.getMessage());}}	
+    
 
     private static void handleErrorAndRetry() throws InterruptedException {
         int retryCount = 0;
         int maxRetries = 3;
-        boolean retrySuccessful = false; // Track if the retry is successful
 
         while (retryCount < maxRetries) {
             try {
-                // Check for 502/500 error by inspecting the page title or source
-                if (driver.getTitle().contains("502") || driver.getTitle().contains("500") || 
-                    driver.getPageSource().contains("502") || driver.getPageSource().contains("500")) {
-                    System.out.println("Detected 502/500 error, refreshing the page.");
+                // Check for 502/500 error on the page
+                String pageTitle = driver.getTitle();
+                String pageSource = driver.getPageSource();
+
+                if (pageTitle.contains("502") || pageTitle.contains("500") || 
+                    pageSource.contains("502") || pageSource.contains("500")) {
+
+                    System.out.println("Detected 502/500 error. Attempt " + (retryCount + 1) + " to refresh the page.");
                     driver.navigate().refresh();
                     retryCount++;
-                    Thread.sleep(2000); // Wait before retrying
+
+                    // Wait before retrying
+                    Thread.sleep(3000);
                 } else {
-                    // If no error detected, break the loop and continue
-                    retrySuccessful = true;
-                    break; // Exit the loop since no error was detected
+                    System.out.println("No error detected. Proceeding with test.");
+                    return; // Exit function as test is back to normal
                 }
             } catch (NoSuchWindowException e) {
-                System.out.println("No such window detected. Retrying...");
+                System.out.println("No such window detected. Retrying attempt " + (retryCount + 1));
                 retryCount++;
                 driver.navigate().refresh();
                 Thread.sleep(2000);
             } catch (Exception e) {
-                // Log unexpected exceptions
-                System.out.println("An error occurred: " + e.getMessage());
-                break; // Exit the loop if an unexpected exception occurs
+                System.out.println("Unexpected error occurred: " + e.getMessage());
+                break;
             }
-        }
+        }		
 
-        // After retry loop ends, either continue or stop the test based on retry count
         if (retryCount >= maxRetries) {
-            System.out.println("Maximum retry attempts reached. Test will stop.");
-        } else if (retrySuccessful) {
-            System.out.println("Continuing test after error handling.");
+            System.out.println("Maximum retry attempts reached. Stopping test.");
         }
     }
+
 
 
 
@@ -190,10 +197,12 @@ static WebDriver driver;
     public static void tearDown() {
         // Close the browser after the test
         driver.quit();
+        System.out.println("Browser closed successfully.");
     }
 
     public static void main(String[] args) throws InterruptedException {
         setup();
         ElementsinDemoQA();
+        tearDown(); 
     }
 }
