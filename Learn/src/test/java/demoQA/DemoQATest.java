@@ -59,7 +59,7 @@ public class DemoQATest {
 
 
         // Step 5: Fill in the registration form fields
-        driver.findElement(By.id("firstname")).sendKeys("shivani");
+        driver.findElement(By.id("firstname")).sendKeys("S");
         driver.findElement(By.id("lastname")).sendKeys("rampally");
         driver.findElement(By.id("userName")).sendKeys("shivani.Rampally");
         driver.findElement(By.id("password")).sendKeys("P@ssword1");
@@ -67,46 +67,58 @@ public class DemoQATest {
         
 
         // Step 7: Handle "I'm not a robot" checkbox
+        //Step 7.1: Switch to IFrame
+        WebElement iframe = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//iframe[contains(@title, 'reCAPTCHA')]")));
+        driver.switchTo().frame(iframe);
+        System.out.println("Switched to reCAPTCHA iframe");
+        
+		//Step 7.2: Click on Check box	
+        WebElement checkBox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='recaptcha-checkbox-border']")));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", checkBox);
+        System.out.println("reCAPTCHA checkbox clicked");
+     	driver.switchTo().defaultContent();
+     	
+     	 // Step 8: Wait for 10 seconds before clicking "Register"
         try {
-
-    	    System.out.println("Before Captcha checkbox.");
-
-        	WebElement captchaCheckbox = wait.until(ExpectedConditions.presenceOfElementLocated(By.id("recaptcha-anchor")));
-
-        	// Check if the element is visible
-        	if (captchaCheckbox.isDisplayed()) {
-        	    // Scroll into view and click
-        	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", captchaCheckbox);
-        	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", captchaCheckbox);
-        	    System.out.println("Captcha checkbox clicked.");
-        	} else {
-        	    System.out.println("Captcha checkbox is not displayed.");
-        	}
-         } catch (Exception e) {
-            System.out.println(e + "Captcha checkbox interaction failed.");
+            Thread.sleep(10000);  // Waiting for 30 seconds to allow page elements to stabilize
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-        // Step 8: Click the "Register" button
+	
+        // Step 9: Click the "Register" button
         WebElement registerButton = driver.findElement(By.id("register"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", registerButton);
         registerButton.click();
         System.out.println("Clicked on Register button");
-
-
-        // Step 9: Click on Back to Login button
-        WebElement loginButtonAfterRegister = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='Back to Login']")));
-        Assert.assertTrue(loginButtonAfterRegister.isDisplayed(), "'Back to Login' button is not displayed.");
-        loginButtonAfterRegister.click();
-        System.out.println("User navigated to Login page");
-
+        
+        //Step 10: Verify is the user exist
+        try {
+            WebElement userExistMsg = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//p[@id='name']")));
+            if (userExistMsg.isDisplayed()) {
+                System.out.println("User already exists. Navigating to login.");
+                WebElement backToLoginBtn = wait.until(ExpectedConditions.elementToBeClickable(By.id("gotologin")));
+                backToLoginBtn.click();
+            }
+        } catch (Exception e) {
+            System.out.println("User is new. Proceeding with login.");
+        }
+        
         // Step 11: Log in with registered username and password
         driver.findElement(By.id("userName")).sendKeys("shivani.Rampally");
         driver.findElement(By.id("password")).sendKeys("P@ssword1");
         driver.findElement(By.id("login")).click();
+        System.out.println("User logged in sucessfully");
+
 
         // Step 12: Verify successful login by checking the username on the page
-        WebElement userProfile = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Profile']")));
-        Assert.assertTrue(userProfile.isDisplayed(), "User login was not successful.");
-        System.out.println("User Logged in sucessfully");
+        // Step 12.1 : Verify the presence of logout button
+        WebElement LogoutButtonPresent = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[contains(text(),'Log out')]")));
+        System.out.println("User navigated to user profile page and logout button visible");
+        WebElement userNameLabel = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("userName-value")));
+        String actualUserName = userNameLabel.getText();
+        String expectedUserName = "shivani.Rampally";
+        Assert.assertEquals(actualUserName, expectedUserName, "Displayed username does not match the logged-in username!");
+        System.out.println("Logged in user profile name verified ");
 
     }
 
