@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="demoQA.DemoQAElements">
+      <class name="demoQA.DemoQACookie">
         <methods>
           <include name="tearDown"/>
-          <include name="ElementsinDemoQA"/>
           <include name="setup"/>
+          <include name="loginWithCookiesAndVerifyProfile"/>
         </methods>
-      </class> <!-- demoQA.DemoQAElements -->
+      </class> <!-- demoQA.DemoQACookie -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

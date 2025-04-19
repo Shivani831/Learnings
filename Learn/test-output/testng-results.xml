@@ -1,25 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+<testng-results ignored="0" total="2" passed="2" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2025-03-05T17:34:18 IST" name="Default suite" finished-at="2025-03-05T17:34:34 IST" duration-ms="16226">
+  <suite started-at="2025-04-19T15:20:40 IST" name="Default suite" finished-at="2025-04-19T15:21:52 IST" duration-ms="72575">
     <groups>
     </groups>
-    <test started-at="2025-03-05T17:34:18 IST" name="Default test" finished-at="2025-03-05T17:34:34 IST" duration-ms="16226">
-      <class name="demoQA.DemoQAElements">
-        <test-method is-config="true" signature="setup()[pri:0, instance:demoQA.DemoQAElements@6ad82709]" started-at="2025-03-05T17:34:18 IST" name="setup" finished-at="2025-03-05T17:34:21 IST" duration-ms="3679" status="PASS">
+    <test started-at="2025-04-19T15:20:40 IST" name="Default test" finished-at="2025-04-19T15:21:52 IST" duration-ms="72575">
+      <class name="demoQA.DemoQATest">
+        <test-method is-config="true" signature="setup()[pri:0, instance:demoQA.DemoQATest@69453e37]" started-at="2025-04-19T15:20:40 IST" name="setup" finished-at="2025-04-19T15:20:43 IST" duration-ms="2989" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="ElementsinDemoQA()[pri:0, instance:demoQA.DemoQAElements@6ad82709]" started-at="2025-03-05T17:34:21 IST" name="ElementsinDemoQA" finished-at="2025-03-05T17:34:32 IST" duration-ms="11068" status="PASS">
+        <test-method signature="registerAndLoginTest(java.lang.String,java.lang.String,java.lang.String)[pri:0, instance:demoQA.DemoQATest@69453e37]" started-at="2025-04-19T15:20:43 IST" name="registerAndLoginTest" data-provider="loginData" finished-at="2025-04-19T15:21:52 IST" duration-ms="69106" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[https://demoqa.com/login]]>
+              </value>
+            </param>
+            <param index="1">
+              <value>
+                <![CDATA[shivani.Rampally]]>
+              </value>
+            </param>
+            <param index="2">
+              <value>
+                <![CDATA[P@ssword1]]>
+              </value>
+            </param>
+          </params>
           <reporter-output>
           </reporter-output>
-        </test-method> <!-- ElementsinDemoQA -->
-        <test-method is-config="true" signature="tearDown()[pri:0, instance:demoQA.DemoQAElements@6ad82709]" started-at="2025-03-05T17:34:32 IST" name="tearDown" finished-at="2025-03-05T17:34:34 IST" duration-ms="1426" status="PASS">
+        </test-method> <!-- registerAndLoginTest -->
+        <test-method signature="tearDown()[pri:0, instance:demoQA.DemoQATest@69453e37]" started-at="2025-04-19T15:21:52 IST" name="tearDown" finished-at="2025-04-19T15:21:52 IST" duration-ms="418" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- tearDown -->
-      </class> <!-- demoQA.DemoQAElements -->
+      </class> <!-- demoQA.DemoQATest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->
 </testng-results>

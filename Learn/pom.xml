@@ -17,11 +17,11 @@
 </dependency>
 
     <!-- WebDriverManager to manage browser drivers automatically -->
-    <dependency>
-        <groupId>io.github.bonigarcia</groupId>
-        <artifactId>webdrivermanager</artifactId>
-        <version>5.3.1</version>
-    </dependency>
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>5.5.3</version> 
+</dependency>
 
     <!-- TestNG dependency for running tests -->
     <dependency>
